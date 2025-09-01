@@ -5,10 +5,10 @@ public class Program()
     ConsoleColor originalForegroundColor = Console.ForegroundColor;
     private List<IAlgorithm> algorithms = new List<IAlgorithm>();
    
-    private int[] ints = new int[10];
+    private int[] ints = new int[101]; //50,000,000 is max
     private float timeout = 10; // in seconds
     private float printInterval = 1; // also in seconds
-    long lastPrint = 0;
+
 
     public static void Main(string[] args)
     {
@@ -25,7 +25,7 @@ public class Program()
         Array.Sort(solved);
 
         Setup();
-        
+
 
         foreach (var algorithm in algorithms)
         {
@@ -33,12 +33,22 @@ public class Program()
             Console.WriteLine($"Running: {algorithm.Name}");
             Console.ForegroundColor = originalForegroundColor;
 
+            Thread.Sleep(1000); //delay before running
 
             Stopwatch stopwatch = Stopwatch.StartNew();
+            long lastPrint = 0;
 
-            while (!(algorithm.Sort(ints) == solved) && (stopwatch.ElapsedMilliseconds < timeout * 1000))
+            while (stopwatch.ElapsedMilliseconds < timeout * 1000)
             {
-                int[] array = algorithm.Sort(ints);
+                int[] array = algorithm.Sort((int[])ints.Clone());
+
+                if (array.SequenceEqual(solved))
+                {
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.WriteLine($"{algorithm.Name} took {stopwatch.ElapsedMilliseconds} ms to sort the array");
+                    Console.ForegroundColor = originalForegroundColor;
+                    break; // exit the loop
+                }
 
                 if (stopwatch.ElapsedMilliseconds - lastPrint >= printInterval * 1000)
                 {
@@ -47,15 +57,11 @@ public class Program()
                     Console.WriteLine(" @ " + stopwatch.ElapsedMilliseconds / 1000 + " seconds");
                     lastPrint = stopwatch.ElapsedMilliseconds;
                 }
-
-                if (array == solved)
-                {
-                    stopwatch.Stop();
-                    Console.WriteLine($"{algorithm.Name} took {stopwatch.ElapsedMilliseconds} to sort the array");
-                }
             }
 
-            if (algorithm.Sort(ints) != solved)
+            int[] finalResult = algorithm.Sort((int[])ints.Clone());
+
+            if (!finalResult.SequenceEqual(solved))
             {
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine($"{algorithm.Name} was not able to sort the array in {timeout} seconds");
@@ -63,6 +69,7 @@ public class Program()
             }
 
             Console.WriteLine();
+            stopwatch.Stop();
         }
     }
 
@@ -71,19 +78,30 @@ public class Program()
         FindAlgorithms();
 
         Console.WriteLine();
-        Console.Write("Algorithms are sorting this array: {");
 
-        for (int i = 0; i < ints.Length; i++)
+
+        if (ints.Length < 100)
         {
-            if (!(i == ints.Length - 1))
-                Console.Write(ints[i] + ", ");
-            else
+            Console.Write("Algorithms are sorting this array: {");
+
+            for (int i = 0; i < ints.Length; i++)
             {
-                Console.Write(ints[i]);
+                if (!(i == ints.Length - 1))
+                    Console.Write(ints[i] + ", ");
+                else
+                {
+                    Console.Write(ints[i]);
+                }
             }
+
+            Console.WriteLine("}");
+        }
+        else
+        {
+            Console.WriteLine("The array is {" + ints.Length + "} ints long");
         }
 
-        Console.WriteLine("}");
+
 
         Console.WriteLine();
     }
@@ -91,17 +109,27 @@ public class Program()
     public void PrintArray() {
 
         Console.Write("{");
-        for (int i = 0; i < ints.Length; i++)
+
+        if (ints.Length < 100)
         {
-            if (!(i == ints.Length - 1))
-                Console.Write(ints[i] + ", ");
-            else
+            for (int i = 0; i < ints.Length; i++)
             {
-                Console.Write(ints[i]);
+                if (!(i == ints.Length - 1))
+                    Console.Write(ints[i] + ", ");
+                else
+                {
+                    Console.Write(ints[i]);
+                }
             }
+
+            Console.Write("}");
+        }
+        else
+        {
+            Console.WriteLine("The array is {" + ints.Length + "} ints long");
         }
 
-        Console.Write("}");
+
     }
 
     public void GetRandomInts()
