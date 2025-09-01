@@ -4,12 +4,14 @@ This project allows you to implement custom sorting algorithms in C# using a sim
 
 ## Table of Contents
 
-- [Overview](#overview)
-- [Interface](#interface)
-- [Creating a New Algorithm](#creating-a-new-algorithm)
-- [Adding Your Algorithm](#adding-your-algorithm)
-- [Example](#example)
-- [Running the Program](#running-the-program)
+- [Sorting Algorithm Tutorial](#sorting-algorithm-tutorial)
+  - [Table of Contents](#table-of-contents)
+  - [Overview](#overview)
+  - [Interface](#interface)
+  - [Creating a New Algorithm](#creating-a-new-algorithm)
+  - [Adding Your Algorithm](#adding-your-algorithm)
+  - [Example](#example)
+  - [Running the Program](#running-the-program)
 
 ---
 
@@ -69,7 +71,7 @@ public class MySortingAlgorithm : IAlgorithm
 
 - Always clone the input array if your algorithm modifies it in-place.
 - Make sure the `Sort` method returns the sorted array.
-- The `Program.cs` file will automatically run the algorithm until the array is sorted, no need for any while(true) statements
+- The `Program.cs` file will run the algorithm until the array is sorted
 
 ---
 
