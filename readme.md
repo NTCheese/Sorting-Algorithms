@@ -57,6 +57,7 @@ public class MySortingAlgorithm, : IAlgorithm
     public int[] Sort(int[] nums)
     {
         int[] array = nums;
+
         //Logic goes here
 
         return array;
@@ -68,6 +69,7 @@ public class MySortingAlgorithm, : IAlgorithm
 
 - Always clone the input array if your algorithm modifies it in-place.
 - Make sure the `Sort` method returns the sorted array.
+- The `Program.cs` file will automatically run the algorithm until the array is sorted, no need for any while(true) statements
 
 ---
 
