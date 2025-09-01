@@ -53,5 +53,5 @@ CodeCoverage/
 TestResult.xml
 nunit-*.xml
 
-# Specific Files
-src/Algorithms/SlowSort.cs
+# Specific Files (evil hehe you wil never see slow sort muhahahaha)
+src/Algorithms/SlowSort.cs 
