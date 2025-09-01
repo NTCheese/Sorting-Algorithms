@@ -5,7 +5,7 @@ public class Program()
     ConsoleColor originalForegroundColor = Console.ForegroundColor;
     private List<IAlgorithm> algorithms = new List<IAlgorithm>();
    
-    private int[] ints = new int[101]; //50,000,000 is max
+    private int[] ints = new int[10]; //50,000,000 is max
     private float timeout = 10; // in seconds
     private float printInterval = 1; // also in seconds
 
@@ -33,43 +33,48 @@ public class Program()
             Console.WriteLine($"Running: {algorithm.Name}");
             Console.ForegroundColor = originalForegroundColor;
 
-            Thread.Sleep(1000); //delay before running
-
             Stopwatch stopwatch = Stopwatch.StartNew();
-            long lastPrint = 0;
+            Stopwatch printTimer = Stopwatch.StartNew();
 
-            while (stopwatch.ElapsedMilliseconds < timeout * 1000)
+            int[] array = (int[])ints.Clone();
+            int[] solveda = (int[])array.Clone();
+            Array.Sort(solveda);
+
+            bool solvedFlag = false;
+
+        while (stopwatch.ElapsedMilliseconds < timeout * 1000)
+        {
+            array = algorithm.Sort(array);
+
+            if (array.SequenceEqual(solveda))
             {
-                int[] array = algorithm.Sort((int[])ints.Clone());
-
-                if (array.SequenceEqual(solved))
-                {
-                    Console.ForegroundColor = ConsoleColor.Green;
-                    Console.WriteLine($"{algorithm.Name} took {stopwatch.ElapsedMilliseconds} ms to sort the array");
-                    Console.ForegroundColor = originalForegroundColor;
-                    break; // exit the loop
-                }
-
-                if (stopwatch.ElapsedMilliseconds - lastPrint >= printInterval * 1000)
-                {
-                    Console.Write("Array is ");
-                    PrintArray();
-                    Console.WriteLine(" @ " + stopwatch.ElapsedMilliseconds / 1000 + " seconds");
-                    lastPrint = stopwatch.ElapsedMilliseconds;
-                }
+                solvedFlag = true;
+                break;
             }
 
-            int[] finalResult = algorithm.Sort((int[])ints.Clone());
+            if (printTimer.ElapsedMilliseconds >= 1000) // print every second
+            {
+                Console.Write("Array state: { ");
+                Console.Write(string.Join(", ", array));
+                Console.WriteLine(" }");
+                printTimer.Restart();
+            }
+        }
+            stopwatch.Stop();
 
-            if (!finalResult.SequenceEqual(solved))
+            if (solvedFlag)
+            {
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine($"{algorithm.Name} sorted the array in {stopwatch.ElapsedMilliseconds} ms");
+            }
+            else
             {
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine($"{algorithm.Name} was not able to sort the array in {timeout} seconds");
-                Console.ForegroundColor = originalForegroundColor;
+                Console.WriteLine($"{algorithm.Name} was not able to sort the array within {timeout} seconds");
             }
 
+            Console.ForegroundColor = originalForegroundColor;
             Console.WriteLine();
-            stopwatch.Stop();
         }
     }
 
