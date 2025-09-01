@@ -52,7 +52,7 @@ public interface IAlgorithm
 ```csharp
 using System;
 
-public class MySortingAlgorithm, : IAlgorithm
+public class MySortingAlgorithm : IAlgorithm
 {
     public int[] Sort(int[] nums)
     {
